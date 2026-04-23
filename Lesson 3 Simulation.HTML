@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Phases - Primary Science Simulation</title>
+    <style>
+        :root {
+            --bg-color: #050814;
+            --panel-bg: #111827;
+            --accent: #3b82f6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 15px 20px;
+            background: rgba(17, 24, 39, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #60a5fa;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        p.subtitle {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content Area */
+        #sim-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+
+        .view-panel {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .view-panel:last-child {
+            border-right: none;
+        }
+
+        .view-title {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .canvas-container {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Phase Display Overlay */
+        #phase-display-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(17, 24, 39, 0.85);
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--accent);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 5;
+            min-width: 250px;
+        }
+
+        #phase-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin: 0 0 5px 0;
+        }
+
+        #day-counter {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Controls Footer */
+        #controls {
+            background: var(--panel-bg);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 1rem;
+            min-width: 100px;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button.paused {
+            background: #ef4444;
+        }
+        button.paused:hover {
+            background: #dc2626;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            cursor: pointer;
+            accent-color: var(--accent);
+            height: 6px;
+            background: #374151;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .sunlight-indicator {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 0.9rem;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .sunlight-arrows {
+            font-size: 2rem;
+            line-height: 0.5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(-10px); }
+            100% { opacity: 0.5; transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sim-container {
+                flex-direction: column;
+            }
+            .view-panel {
+                border-right: none;
+                border-bottom: 2px solid #333;
+            }
+            .sunlight-indicator {
+                top: auto;
+                bottom: 20px;
+                right: 20px;
+                transform: none;
+            }
+        }
+    </style>
+    <!-- Import Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Moon Phases Simulation</h1>
+        <p class="subtitle">Observe how the Moon's position relative to the Sun creates the phases we see from Earth.</p>
+    </header>
+
+    <div id="sim-container">
+        <!-- Left Panel: Space View -->
+        <div class="view-panel">
+            <div class="view-title">Space View (Top-Down)</div>
+            <div id="space-canvas" class="canvas-container"></div>
+            
+            <div class="sunlight-indicator">
+                <span>SUNLIGHT</span>
+                <div class="sunlight-arrows">
+                    <div>←</div><div>←</div><div>←</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Earth View -->
+        <div class="view-panel">
+            <div class="view-title">Earth View (What we see)</div>
+            <div id="earth-canvas" class="canvas-container"></div>
+            
+            <div id="phase-display-container">
+                <h2 id="phase-name">New Moon</h2>
+                <p id="day-counter">Day 0.0 of 29.5</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls">
+        <button id="play-pause-btn">Pause</button>
+        <div class="control-group">
+            <label style="font-weight: bold; min-width: 80px;">Time Slider:</label>
+            <input type="range" id="time-slider" min="0" max="29.53" step="0.05" value="0">
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- Constants & State ---
+        const SYNODIC_MONTH = 29.53; // Days for a full cycle of phases
+        let currentDay = 0;
+        let isPlaying = true;
+        const orbitRadius = 40;
+        const earthRadius = 5;
+        const moonRadius = 1.8;
+
+        // UI Elements
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const timeSlider = document.getElementById('time-slider');
+        const phaseNameEl = document.getElementById('phase-name');
+        const dayCounterEl = document.getElementById('day-counter');
+        const spaceContainer = document.getElementById('space-canvas');
+        const earthContainer = document.getElementById('earth-canvas');
+
+        // --- Shared Scene Setup ---
+        // We use one scene and render it from two different cameras
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050814);
+
+        // Add Stars
+        const starsGeo = new THREE.BufferGeometry();
+        const starsVerts = [];
+        for(let i=0; i<2000; i++) {
+            starsVerts.push(
+                (Math.random() - 0.5) * 400,
+                (Math.random() - 0.5) * 400,
+                (Math.random() - 0.5) * 400
+            );
+        }
+        starsGeo.setAttribute('position', new THREE.Float32BufferAttribute(starsVerts, 3));
+        const starsMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.5, transparent: true, opacity: 0.6});
+        scene.add(new THREE.Points(starsGeo, starsMat));
+
+        // --- Lighting (The Sun) ---
+        // Sunlight comes from the Far Right (+X axis)
+        const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        sunLight.position.set(100, 0, 0); 
+        scene.add(sunLight);
+
+        // Very dim ambient light so the dark side is barely visible (not pitch black)
+        const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
+        scene.add(ambientLight);
+
+        // --- Celestial Bodies ---
+        
+        // Earth
+        const earthGeo = new THREE.SphereGeometry(earthRadius, 32, 32);
+        const earthMat = new THREE.MeshStandardMaterial({ 
+            color: 0x2266ff, 
+            roughness: 0.6 
+        });
+        const earth = new THREE.Mesh(earthGeo, earthMat);
+        scene.add(earth);
+
+        // Moon Orbit Group (Pivot point at Earth)
+        const moonOrbitPivot = new THREE.Group();
+        scene.add(moonOrbitPivot);
+
+        // Moon
+        const moonGeo = new THREE.SphereGeometry(moonRadius, 32, 32);
+        const moonMat = new THREE.MeshStandardMaterial({ 
+            color: 0xdddddd, 
+            roughness: 1.0, 
+            metalness: 0.0 
+        });
+        const moon = new THREE.Mesh(moonGeo, moonMat);
+        // Position moon on the +X axis (towards the sun = New Moon starting position)
+        moon.position.set(orbitRadius, 0, 0);
+        moonOrbitPivot.add(moon);
+
+        // Orbit Path Line (Visual aid for space view)
+        const pathGeo = new THREE.BufferGeometry();
+        const pathVerts = [];
+        for(let i = 0; i <= 64; i++) {
+            const angle = (i / 64) * Math.PI * 2;
+            pathVerts.push(Math.cos(angle) * orbitRadius, 0, Math.sin(angle) * orbitRadius);
+        }
+        pathGeo.setAttribute('position', new THREE.Float32BufferAttribute(pathVerts, 3));
+        const pathMat = new THREE.LineBasicMaterial({ color: 0x445566, transparent: true, opacity: 0.5 });
+        const orbitLine = new THREE.Line(pathGeo, pathMat);
+        scene.add(orbitLine);
+
+        // --- Renderers & Cameras ---
+
+        // 1. Space View (Top-Down)
+        const spaceRenderer = new THREE.WebGLRenderer({ antialias: true });
+        spaceRenderer.setPixelRatio(window.devicePixelRatio);
+        spaceContainer.appendChild(spaceRenderer.domElement);
+
+        // Orthographic camera is better for top-down diagrams to avoid perspective distortion
+        const aspect = spaceContainer.clientWidth / spaceContainer.clientHeight;
+        const d = 55; // View frustum size
+        const spaceCamera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
+        spaceCamera.position.set(0, 100, 0); // Looking straight down from Y axis
+        spaceCamera.lookAt(0, 0, 0);
+
+        // Add OrbitControls for Space View (allow teacher to pan/zoom slightly)
+        const spaceControls = new OrbitControls(spaceCamera, spaceRenderer.domElement);
+        spaceControls.enableRotate = false; // Keep it strictly top-down
+        spaceControls.enablePan = true;
+        spaceControls.minZoom = 0.5;
+        spaceControls.maxZoom = 2;
+
+        // 2. Earth View (First-Person looking at Moon)
+        const earthRenderer = new THREE.WebGLRenderer({ antialias: true });
+        earthRenderer.setPixelRatio(window.devicePixelRatio);
+        earthContainer.appendChild(earthRenderer.domElement);
+
+        const earthCamera = new THREE.PerspectiveCamera(15, earthContainer.clientWidth / earthContainer.clientHeight, 0.1, 100);
+        // Camera sits inside the Earth, looking out
+        earthCamera.position.set(0, 0, 0); 
+        
+        // --- Resize Handler ---
+        function onWindowResize() {
+            // Space View
+            const sWidth = spaceContainer.clientWidth;
+            const sHeight = spaceContainer.clientHeight;
+            spaceRenderer.setSize(sWidth, sHeight);
+            const sAspect = sWidth / sHeight;
+            spaceCamera.left = -d * sAspect;
+            spaceCamera.right = d * sAspect;
+            spaceCamera.top = d;
+            spaceCamera.bottom = -d;
+            spaceCamera.updateProjectionMatrix();
+
+            // Earth View
+            const eWidth = earthContainer.clientWidth;
+            const eHeight = earthContainer.clientHeight;
+            earthRenderer.setSize(eWidth, eHeight);
+            earthCamera.aspect = eWidth / eHeight;
+            earthCamera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', onWindowResize);
+        onWindowResize(); // Initial sizing
+
+        // --- Phase Calculation Logic ---
+        function getPhaseName(day) {
+            // Day 0 = New Moon
+            const cyclePercent = day / SYNODIC_MONTH;
+            const angleDeg = cyclePercent * 360;
+
+            // Define buffer zones for precise phases (e.g. +/- 3 degrees)
+            const buffer = 4;
+
+            if (angleDeg < buffer || angleDeg > 360 - buffer) return "New Moon";
+            if (angleDeg < 90 - buffer) return "Waxing Crescent";
+            if (angleDeg < 90 + buffer) return "First Quarter";
+            if (angleDeg < 180 - buffer) return "Waxing Gibbous";
+            if (angleDeg < 180 + buffer) return "Full Moon";
+            if (angleDeg < 270 - buffer) return "Waning Gibbous";
+            if (angleDeg < 270 + buffer) return "Third Quarter";
+            return "Waning Crescent";
+        }
+
+        // --- Interaction Logic ---
+        playPauseBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playPauseBtn.textContent = "Pause";
+                playPauseBtn.classList.remove('paused');
+            } else {
+                playPauseBtn.textContent = "Play";
+                playPauseBtn.classList.add('paused');
+            }
+        });
+
+        timeSlider.addEventListener('input', (e) => {
+            currentDay = parseFloat(e.target.value);
+            isPlaying = false; // Auto-pause when user manually scrubs
+            playPauseBtn.textContent = "Play";
+            playPauseBtn.classList.add('paused');
+            updateSimulation();
+        });
+
+        // --- Main Simulation Update ---
+        function updateSimulation() {
+            // 1. Calculate angles
+            // Counter-clockwise orbit. 
+            // 0 days = 0 radians (Moon is at +X, between Earth and Sun)
+            const orbitAngle = (currentDay / SYNODIC_MONTH) * (Math.PI * 2);
+            
+            // 2. Move the Moon
+            // We rotate the pivot. 
+            // Because +X is right, and we want counter-clockwise (looking from top +Y), we use positive rotation around Y.
+            moonOrbitPivot.rotation.y = orbitAngle;
+
+            // 3. Tidally lock the Moon (same side faces Earth)
+            // As the pivot rotates one way, the moon must rotate relative to the pivot so the same face points inwards.
+            // In Three.js, a child inherits pivot rotation. So by default, the same face *will* point to the center.
+            // We just ensure it's aligned.
+            
+            // 4. Update Earth Camera to track the Moon exactly
+            const moonWorldPos = new THREE.Vector3();
+            moon.getWorldPosition(moonWorldPos);
+            earthCamera.lookAt(moonWorldPos);
+
+            // 5. Update UI
+            dayCounterEl.textContent = `Day ${currentDay.toFixed(1)} of 29.5`;
+            phaseNameEl.textContent = getPhaseName(currentDay);
+            timeSlider.value = currentDay;
+        }
+
+        // --- Animation Loop ---
+        const clock = new THREE.Clock();
+        const timeScale = 2.0; // 2 days per second of real time
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isPlaying) {
+                const delta = clock.getDelta();
+                currentDay += delta * timeScale;
+                
+                // Reset loop
+                if (currentDay > SYNODIC_MONTH) {
+                    currentDay = 0;
+                }
+                updateSimulation();
+            } else {
+                // Keep clock updating so delta doesn't spike when resuming
+                clock.getDelta(); 
+            }
+
+            // Render Space View
+            spaceRenderer.render(scene, spaceCamera);
+
+            // Render Earth View
+            earthRenderer.render(scene, earthCamera);
+        }
+
+        // Initialize and start
+        updateSimulation();
+        animate();
+
+    </script>
+</body>
+</html>
