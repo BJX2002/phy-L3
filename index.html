@@ -83,7 +83,7 @@
       gap: 8px;
       margin-bottom: 6px;
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: 0.88rem;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -100,7 +100,7 @@
     .subtitle {
       margin: 8px 0 0;
       color: var(--muted);
-      font-size: 0.94rem;
+      font-size: 1.05rem;
       line-height: 1.45;
     }
 
@@ -120,7 +120,7 @@
       border-radius: 999px;
       background: rgba(2, 6, 23, 0.42);
       color: #dbeafe;
-      font-size: 0.82rem;
+      font-size: 0.94rem;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -139,7 +139,7 @@
       border-radius: 999px;
       background: rgba(37, 99, 235, 0.18);
       color: #dbeafe;
-      font-size: 0.82rem;
+      font-size: 0.94rem;
       font-weight: 800;
       cursor: pointer;
       transition: background 0.16s ease, border-color 0.16s ease;
@@ -154,7 +154,7 @@
     main {
       min-height: 0;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns: 1.4fr 0.85fr;
       gap: 14px;
       padding: 14px;
     }
@@ -183,7 +183,7 @@
       background: rgba(2, 6, 23, 0.72);
       backdrop-filter: blur(12px);
       box-shadow: 0 12px 28px rgba(0,0,0,0.22);
-      font-size: 0.9rem;
+      font-size: 1.02rem;
       font-weight: 800;
       pointer-events: none;
     }
@@ -307,7 +307,7 @@
       background: rgba(96, 165, 250, 0.12);
       border: 1px solid rgba(96, 165, 250, 0.35);
       color: #bfdbfe;
-      font-size: 0.64rem;
+      font-size: 0.76rem;
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -316,7 +316,7 @@
 
     .phase-day {
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.84rem;
       font-weight: 800;
       white-space: nowrap;
     }
@@ -324,7 +324,7 @@
     #phase-name {
       margin: 0;
       color: var(--gold);
-      font-size: clamp(1.15rem, 1.9vw, 1.72rem);
+      font-size: clamp(1.32rem, 2.1vw, 1.95rem);
       line-height: 1.08;
       font-weight: 900;
       letter-spacing: -0.02em;
@@ -333,15 +333,15 @@
     #phase-subtitle {
       margin: 5px 0 0;
       color: #dbeafe;
-      font-size: 0.88rem;
+      font-size: 1.0rem;
       font-weight: 800;
     }
 
     #phase-explanation {
       margin: 7px 0 0;
       color: var(--muted);
-      font-size: 0.80rem;
-      line-height: 1.38;
+      font-size: 0.94rem;
+      line-height: 1.45;
     }
 
     .quick-facts {
@@ -377,8 +377,8 @@
       background: rgba(6, 78, 59, 0.18);
       color: #ccfbf1;
       backdrop-filter: blur(12px);
-      font-size: 0.82rem;
-      line-height: 1.45;
+      font-size: 0.94rem;
+      line-height: 1.5;
     }
 
     .teacher-note strong {
@@ -410,7 +410,7 @@
       cursor: pointer;
       color: #fff;
       font-weight: 900;
-      font-size: 0.92rem;
+      font-size: 1.02rem;
       padding: 11px 14px;
       border-radius: 12px;
       background: linear-gradient(180deg, #3b82f6, #2563eb);
@@ -472,7 +472,7 @@
     label {
       color: #e5e7eb;
       font-weight: 900;
-      font-size: 0.88rem;
+      font-size: 1.0rem;
       white-space: nowrap;
     }
 
@@ -482,7 +482,7 @@
       background: rgba(2, 6, 23, 0.44);
       border: 1px solid rgba(148, 163, 184, 0.18);
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.9rem;
       font-weight: 900;
       text-align: center;
       white-space: nowrap;
@@ -513,7 +513,7 @@
       border-radius: 999px;
       background: rgba(2, 6, 23, 0.54);
       color: var(--muted);
-      font-size: 0.74rem;
+      font-size: 0.86rem;
       font-weight: 800;
       backdrop-filter: blur(10px);
       pointer-events: none;
@@ -525,7 +525,7 @@
       background: rgba(148, 163, 184, 0.18);
       color: #e5e7eb;
       font-family: inherit;
-      font-size: 0.72rem;
+      font-size: 0.84rem;
     }
 
     @media (max-width: 1050px) {
@@ -591,7 +591,7 @@
         display: none;
       }
       .panel-label {
-        font-size: 0.78rem;
+        font-size: 0.88rem;
         padding: 6px 10px;
       }
       header {
@@ -601,7 +601,7 @@
         padding: 12px 14px 14px;
       }
       button {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         padding: 10px 12px;
       }
     }
@@ -635,10 +635,6 @@
         <div class="panel-label" data-i18n-html="spacePanelLabel">🛰️ <span>Space View</span> Top-Down Model</div>
         <div class="keyboard-help" data-i18n-html="keyboardHelp"><kbd>Space</kbd> Play/Pause · <kbd>←</kbd><kbd>→</kbd> Phase · <kbd>R</kbd> Reset</div>
         <div id="space-canvas" class="canvas-container"></div>
-
-        <div class="teacher-note" data-i18n-html="teacherCue">
-          <strong>Teacher cue:</strong> The Moon itself does not change shape. The Sun lights half of the Moon; we see different amounts of that lit half as the Moon orbits Earth.
-        </div>
       </section>
 
       <section class="view-panel earth-panel" aria-label="Earth view what we see">
@@ -653,12 +649,6 @@
           <h2 id="phase-name">New Moon</h2>
           <p id="phase-subtitle">The dark side faces Earth.</p>
           <p id="phase-explanation">The Moon is between the Sun and Earth. The lit half faces the Sun, so from Earth we see little or no lit part.</p>
-          <div class="quick-facts">
-            <div class="fact" data-i18n-html="fact0"><strong>Moon light:</strong> reflected sunlight</div>
-            <div class="fact" data-i18n-html="fact1"><strong>Cause:</strong> changing view from Earth</div>
-            <div class="fact" data-i18n-html="fact2"><strong>Cycle:</strong> about 29.5 days</div>
-            <div class="fact" data-i18n-html="fact3"><strong>Not caused by:</strong> Earth’s shadow</div>
-          </div>
         </div>
       </section>
     </main>
@@ -718,14 +708,9 @@
         scaleBadge: 'Not to scale',
         spacePanelLabel: '🛰️ <span>Space View</span> Top-Down Model',
         keyboardHelp: '<kbd>Space</kbd> Play/Pause · <kbd>←</kbd><kbd>→</kbd> Phase · <kbd>R</kbd> Reset',
-        teacherCue: '<strong>Teacher cue:</strong> The Moon itself does not change shape. The Sun lights half of the Moon; we see different amounts of that lit half as the Moon orbits Earth.',
         earthPanelLabel: '👁️ <span>Earth View</span> What We See',
         chipMain: 'Main Phase',
         chipBetween: 'Between Main Phases',
-        fact0: '<strong>Moon light:</strong> reflected sunlight',
-        fact1: '<strong>Cause:</strong> changing view from Earth',
-        fact2: '<strong>Cycle:</strong> about 29.5 days',
-        fact3: '<strong>Not caused by:</strong> Earth’s shadow',
         btnPause: 'Pause',
         btnPlay: 'Play',
         btnReset: 'Reset',
@@ -755,19 +740,14 @@
         title: '四個主要月相模擬',
         eyebrow: '第三課',
         h1: '月相變化模擬',
-        subtitle: '探索陽光、月球的運行軌道，以及我們從地球觀看的角度，如何形成四個主要的月相。',
+        subtitle: '探索太陽與月球的運行軌道，以及我們在地球上的觀測視角，是如何影響四種主要月相的形成。',
         sunlightBadge: '☀️ 陽光由左方射入',
         scaleBadge: '比例僅作示意',
-        spacePanelLabel: '🛰️ <span>太空俰視圖</span> 由上而下的模型',
+        spacePanelLabel: '🛰️ <span>太空俯視圖</span> 由上而下的模型',
         keyboardHelp: '<kbd>Space</kbd> 播放／暫停 · <kbd>←</kbd><kbd>→</kbd> 切換月相 · <kbd>R</kbd> 重設',
-        teacherCue: '<strong>教師提示：</strong>月亮本身的形狀並沒有改變。太陽永遠照亮月球的其中一半；當月球繞著地球運行時，我們從地球所看見「明亮的一面」就會不同。',
         earthPanelLabel: '👁️ <span>地球觀察視角</span> 我們看見的月亮',
         chipMain: '主要月相',
         chipBetween: '主要月相之間',
-        fact0: '<strong>月光來源：</strong>反射的陽光',
-        fact1: '<strong>成因：</strong>從地球觀看的角度改變',
-        fact2: '<strong>週期：</strong>約 29.5 天',
-        fact3: '<strong>並非由於：</strong>地球的影子',
         btnPause: '暫停',
         btnPlay: '播放',
         btnReset: '重設',
@@ -1018,18 +998,18 @@
 
     function makeLabelTexture(text) {
       const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 128;
+      canvas.width = 640;
+      canvas.height = 160;
       const ctx = canvas.getContext('2d');
-      ctx.font = 'bold 56px Inter, system-ui, sans-serif';
+      ctx.font = 'bold 76px Inter, system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       // Soft pill background for legibility against starfield.
-      const padding = 24;
+      const padding = 30;
       const metrics = ctx.measureText(text);
       const textWidth = metrics.width;
       const pillW = textWidth + padding * 2;
-      const pillH = 92;
+      const pillH = 110;
       const pillX = (canvas.width - pillW) / 2;
       const pillY = (canvas.height - pillH) / 2;
       const r = pillH / 2;
@@ -1059,7 +1039,7 @@
 
     function createLabelSprite(text) {
       const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: makeLabelTexture(text), transparent: true, depthTest: false }));
-      sprite.scale.set(16, 4, 1);
+      sprite.scale.set(22, 5.5, 1);
       return sprite;
     }
 
