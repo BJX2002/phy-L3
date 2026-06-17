@@ -273,6 +273,9 @@
       position: static;
       width: 100%;
       max-width: none;
+      /* Fixed text-block height so the Earth-view canvas (and therefore the
+         Moon) stays exactly the same size no matter how long the phase text is. */
+      min-height: 188px;
       border-radius: 0;
       border-left: 0;
       border-right: 0;
@@ -508,6 +511,26 @@
       font-size: 0.84rem;
     }
 
+    /* Short viewports (e.g. iPad in landscape) can't fit the fixed full-height
+       layout, which clipped the Earth-view text. Let the page scroll and give
+       the panels real heights so nothing gets cut off. */
+    @media (max-height: 920px) {
+      body {
+        overflow: auto;
+        height: auto;
+      }
+      #app {
+        height: auto;
+        min-height: 100vh;
+      }
+      .view-panel {
+        min-height: 440px;
+      }
+      .earth-panel {
+        min-height: 480px;
+      }
+    }
+
     @media (max-width: 1050px) {
       header {
         grid-template-columns: 1fr;
@@ -614,7 +637,7 @@
       <section class="view-panel space-panel" aria-label="Space view top down">
         <div class="panel-label" data-i18n-html="spacePanelLabel">🛰️ <span>Space View</span> Top-Down Model</div>
         <button id="view-toggle" class="view-toggle" type="button">🔄 Orbit Simulation</button>
-        <div class="scale-badge" data-i18n="scaleBadge">Not to scale · 比例僅作示意</div>
+        <div class="scale-badge" data-i18n="scaleBadge">Not to scale</div>
         <div id="space-canvas" class="canvas-container"></div>
       </section>
 
@@ -648,7 +671,7 @@
         </div>
         <div class="slider-line">
           <label for="speed-slider" data-i18n="labelSpeed">Speed</label>
-          <input type="range" id="speed-slider" min="0" max="6" step="0.1" value="2" />
+          <input type="range" id="speed-slider" min="0" max="6" step="0.1" value="0.5" />
           <div id="speed-value" class="value-pill">2.0 d/s</div>
         </div>
       </div>
@@ -692,7 +715,7 @@
         h1: 'Moon Phases Simulation',
         subtitle: 'Explore how sunlight, the Moon’s orbit, and our view from Earth create the four main Moon phases.',
         sunlightBadge: '☀️ Sunlight from the left',
-        scaleBadge: '📏 Not to scale · 比例僅作示意',
+        scaleBadge: '📏 Not to scale',
         spacePanelLabel: '🛰️ <span>Space View</span> Top-Down Model',
         keyboardHelp: '<kbd>Space</kbd> Play/Pause · <kbd>←</kbd><kbd>→</kbd> Phase · <kbd>R</kbd> Reset',
         earthPanelLabel: '👁️ <span>Earth View</span>',
@@ -732,7 +755,7 @@
         h1: '月相變化模擬',
         subtitle: '探索太陽與月球的運行軌道，以及我們在地球上的觀測視角，是如何影響四種主要月相的形成。',
         sunlightBadge: '☀️ 陽光由左方射入',
-        scaleBadge: '📏 比例僅作示意 · Not to scale',
+        scaleBadge: '📏 比例僅作示意',
         spacePanelLabel: '🛰️ <span>太空俯視圖</span> 由上而下的模型',
         keyboardHelp: '<kbd>Space</kbd> 播放／暫停 · <kbd>←</kbd><kbd>→</kbd> 切換月相 · <kbd>R</kbd> 重設',
         earthPanelLabel: '👁️ <span>地球觀察視角</span>',
@@ -771,7 +794,7 @@
     let currentLang = (typeof localStorage !== 'undefined' && localStorage.getItem('moon-sim-lang') === 'zh') ? 'zh' : 'en';
     let currentDay = 0;
     let isPlaying = true;
-    let timeScale = 1.0;
+    let timeScale = 0.5;
     let viewMode = 'revolution';
 
     const playPauseBtn = document.getElementById('play-pause-btn');
