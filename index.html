@@ -653,7 +653,7 @@
         <div class="panel-label" data-i18n-html="earthPanelLabel">👁️ <span>Earth View</span></div>
         <div id="earth-canvas" class="canvas-container"></div>
 
-        <div class="science-card">
+        <div class="science-card" aria-live="polite">
           <div class="phase-topline">
             <div id="phase-chip" class="phase-chip">Main Phase</div>
             <div id="day-counter" class="phase-day">Day 0.0 of 29.5</div>
@@ -801,7 +801,9 @@
 
     let currentLang = (typeof localStorage !== 'undefined' && localStorage.getItem('moon-sim-lang') === 'zh') ? 'zh' : 'en';
     let currentDay = 0;
-    let isPlaying = true;
+    // Start at New Moon so the reference explanation is visible before the
+    // learner begins the animation. The Play button still runs the full cycle.
+    let isPlaying = false;
     let timeScale = 0.5;
     let viewMode = 'revolution';
 
