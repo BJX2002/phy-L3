@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title id="page-title">Four Main Moon Phases Simulation</title>
   <style>
     :root {
@@ -686,6 +686,78 @@
         padding: 9px 10px;
         font-size: 0.88rem;
       }
+    }
+
+    /* ── iPad / tablet landscape (900–1050 px wide, taller than a phone):
+       the ≤1050 px rule stacks panels into one column; this restores two-column. ── */
+    @media (min-width: 900px) and (max-width: 1050px) and (min-height: 481px) and (orientation: landscape) {
+      body  { overflow: hidden; height: 100vh; }
+      #app  { height: 100vh; min-height: 0; }
+      main  { grid-template-columns: 1.4fr 0.85fr; grid-template-rows: 1fr; }
+      .space-panel { min-height: 0; }
+      .earth-panel { min-height: 0; }
+      .earth-panel .canvas-container { min-height: 0; }
+      footer { grid-template-columns: auto 1fr auto; }
+      .sliders { min-width: 220px; }
+      .phase-buttons { justify-content: flex-end; }
+      header { grid-template-columns: 1fr auto; }
+      .header-badges { justify-content: flex-end; }
+    }
+
+    /* ── Phone landscape: hide subtitle, show both panels side-by-side,
+       switch footer to flex so it stays in one compact bar. ── */
+    @media (max-height: 480px) and (orientation: landscape) {
+      body { overflow: auto; height: auto; }
+      #app  { height: auto; min-height: 100vh; }
+      header {
+        padding: 7px 14px 5px;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+      }
+      .subtitle { display: none; }
+      main {
+        grid-template-columns: 1.2fr 1fr;
+        grid-template-rows: auto;
+        padding: 8px;
+        gap: 8px;
+      }
+      .view-panel  { min-height: 0; }
+      .space-panel { min-height: 190px; }
+      .earth-panel {
+        min-height: 190px;
+        grid-template-rows: 1fr auto;
+      }
+      .earth-panel .canvas-container { min-height: 110px; }
+      .earth-panel .science-card { min-height: 0; padding: 8px 10px; }
+      #phase-explanation { display: none; }
+      #phase-name { font-size: clamp(0.95rem, 5vw, 1.25rem); }
+      footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px calc(7px + env(safe-area-inset-bottom));
+      }
+      .button-row { flex: 0 0 auto; }
+      .sliders    { flex: 1 1 170px; min-width: 0; gap: 5px; }
+      .slider-line { grid-template-columns: 65px 1fr 54px; gap: 6px; }
+      label       { font-size: 0.83rem; }
+      .value-pill { font-size: 0.79rem; padding: 4px 6px; }
+      button      { font-size: 0.86rem; padding: 8px 10px; }
+      button.phase-btn { font-size: 0.78rem; padding: 7px 8px; }
+      .phase-buttons { flex: 0 1 auto; gap: 6px; }
+    }
+
+    /* ── Phone portrait: restore one-line slider row instead of three stacked
+       rows, so the footer doesn't crowd the canvas panels. ── */
+    @media (max-width: 700px) and (orientation: portrait) {
+      .slider-line { grid-template-columns: 76px 1fr 60px; gap: 7px; }
+    }
+
+    /* ── Very small phone portrait (≤ 360 px): shrink slider labels further. ── */
+    @media (max-width: 360px) and (orientation: portrait) {
+      .slider-line { grid-template-columns: 60px 1fr 50px; gap: 5px; }
+      h1 { font-size: 1.2rem; }
     }
   </style>
   <script type="importmap">
